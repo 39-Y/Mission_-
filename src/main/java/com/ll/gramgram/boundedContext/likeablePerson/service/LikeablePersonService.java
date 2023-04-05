@@ -52,12 +52,14 @@ public class LikeablePersonService {
 
 
     @Transactional
-    public void delete(Integer id) {
+    public RsData delete(Integer id) {
         LikeablePerson likeablePerson = likeablePersonRepository.findById(id).orElse(null);
 
         if(likeablePerson != null){
             likeablePersonRepository.delete(likeablePerson);
+            return RsData.of("S-1", "삭제가 완료되었습니다.");
         }
+        return RsData.of("F-1", "삭제가 실패했습니다.");
     }
 
     public LikeablePerson fromByLikeableId(Integer id) {
