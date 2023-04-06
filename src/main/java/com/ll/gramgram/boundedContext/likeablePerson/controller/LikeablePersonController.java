@@ -64,12 +64,7 @@ public class LikeablePersonController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Integer id) {
-        InstaMember instaMember = rq.getMember().getInstaMember();
-        LikeablePerson likeablePerson=likeablePersonService.fromByLikeableId(id);
-        if(instaMember != null && likeablePerson != null &&
-                        instaMember.getId() == likeablePerson.getFromInstaMember().getId())
-            return rq.redirectWithMsg("/likeablePerson/list", likeablePersonService.delete(id).getMsg());
-        return rq.redirectWithMsg("/likeablePerson/list", "삭제에 실패했습니다.");
+    public String delete(@PathVariable Long id) {
+        return rq.redirectWithMsg("/likeablePerson/list", likeablePersonService.delete(id).getMsg());
     }
 }
