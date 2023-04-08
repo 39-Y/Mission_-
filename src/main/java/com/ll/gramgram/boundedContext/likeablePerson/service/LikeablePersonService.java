@@ -1,5 +1,6 @@
 package com.ll.gramgram.boundedContext.likeablePerson.service;
 
+import com.ll.gramgram.base.rq.Rq;
 import com.ll.gramgram.base.rsData.RsData;
 import com.ll.gramgram.boundedContext.instaMember.entity.InstaMember;
 import com.ll.gramgram.boundedContext.instaMember.service.InstaMemberService;
@@ -18,6 +19,7 @@ import java.util.List;
 public class LikeablePersonService {
     private final LikeablePersonRepository likeablePersonRepository;
     private final InstaMemberService instaMemberService;
+    private final Rq rq;
 
     @Transactional
     public RsData<LikeablePerson> like(Member member, String username, int attractiveTypeCode) {
@@ -48,4 +50,27 @@ public class LikeablePersonService {
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
         return likeablePersonRepository.findByFromInstaMemberId(fromInstaMemberId);
     }
+
+    @Transactional
+    public RsData delete(Long id) {
+        LikeablePerson likeablePerson = likeablePersonRepository.findById(id).orElse(null);
+        InstaMember instaMember = rq.getMember().getInstaMember();
+        RsData rsData= setDeleteRsData(likeablePerson, instaMember);
+        if(rsData.isSuccess())
+            likeablePersonRepository.delete(likeablePerson);
+        return rsData;
+    }
+
+    private RsData setDeleteRsData(LikeablePerson likeablePerson, InstaMember instaMember ){
+        if(likeablePerson == null)
+            return RsData.of("F-1", "호감 표현이 존재하지 않아 삭제 실패했습니다.");
+        else if(instaMember == null ||
+                instaMember.getId() != likeablePerson.getFromInstaMember().getId())
+            return RsData.of("F-2", "올바르지 않은 인스타그램 아이디로 인해 삭제 실패했습니다.");
+        else
+            return RsData.of("S-1",
+                String.format("%s님에 대한 호감 표현을 삭제했습니다.", likeablePerson.getToInstaMemberUsername()));
+    }
+
 }
+
