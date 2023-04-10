@@ -32,10 +32,15 @@ public class LikeablePersonService {
         }
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
-        LikeablePerson exitedLikeable = findByFromAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId());
-        if(exitedLikeable != null){
-            return RsData.of("F-3", "이미 추가된 호감상대입니다.");
+        LikeablePerson existedLikeable = findByFromAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId());
+        //list에서 아이디 확인하는 방식으로 수정할 것.
+        if(existedLikeable != null){
+            if(existedLikeable.getAttractiveTypeCode()== attractiveTypeCode)
+                return RsData.of("F-3", "이미 추가된 호감상대입니다.");
+            else
+                return updateAttractiveType(existedLikeable, attractiveTypeCode);
         }
+        //list 크기로 비교하도록 수정할 것.
         if(countByFromInstaMemberId(member.getInstaMember().getId())>10){
             return RsData.of("F-4", "호감상대가 11명을 초과합니다.");
         }
@@ -51,6 +56,17 @@ public class LikeablePersonService {
         likeablePersonRepository.save(likeablePerson); // 저장
 
         return RsData.of("S-1", "입력하신 인스타유저(%s)를 호감상대로 등록되었습니다.".formatted(username), likeablePerson);
+    }
+
+    private RsData<LikeablePerson> updateAttractiveType(LikeablePerson likeablePerson, int attractiveTypeCode) {
+        String beforeAttractiveType = likeablePerson.getAttractiveTypeDisplayName();
+        likeablePerson.setAttractiveTypeCode(attractiveTypeCode);
+        LikeablePerson newLikeablePerson = likeablePersonRepository.save(likeablePerson);
+        return RsData.of("S-2",
+                String.format("%s 에 대한 호감사유를 %s에서 %s으로 변경합니다."
+                        , newLikeablePerson.getToInstaMemberUsername()
+                        , beforeAttractiveType
+                        , newLikeablePerson.getAttractiveTypeDisplayName()));
     }
 
     public List<LikeablePerson> findByFromInstaMemberId(Long fromInstaMemberId) {
