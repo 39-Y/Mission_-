@@ -15,4 +15,5 @@ public interface LikeablePersonRepository extends JpaRepository<LikeablePerson, 
             "WHERE p.fromInstaMember.id = :fromInstaMemberId AND p.toInstaMember.id = :toInstaMemberId")
     Optional<LikeablePerson> findByFromAndToInstaMember(@Param("fromInstaMemberId") Long fromInstaMemberId,
                                         @Param("toInstaMemberId") Long toInstaMemberId);
+    Long countByFromInstaMemberId(Long fromInstaMemberId);
 }

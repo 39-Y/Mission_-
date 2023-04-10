@@ -36,7 +36,9 @@ public class LikeablePersonService {
         if(exitedLikeable != null){
             return RsData.of("F-3", "이미 추가된 호감상대입니다.");
         }
-
+        if(countByFromInstaMemberId(member.getInstaMember().getId())>10){
+            return RsData.of("F-4", "호감상대가 11명을 초과합니다.");
+        }
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
                 .fromInstaMember(member.getInstaMember()) // 호감을 표시하는 사람의 인스타 멤버
@@ -75,6 +77,12 @@ public class LikeablePersonService {
 
     public LikeablePerson findByFromAndToInstaMemberId(Long fromId, Long ToId) {
         return likeablePersonRepository.findByFromAndToInstaMember(fromId, ToId).orElse(null);
+    }
+
+
+    @Transactional
+    public Long countByFromInstaMemberId(Long fromInstaMemberId){
+        return likeablePersonRepository.countByFromInstaMemberId(fromInstaMemberId);
     }
 }
 
