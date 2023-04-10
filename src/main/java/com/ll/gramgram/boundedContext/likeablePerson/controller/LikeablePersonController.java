@@ -71,7 +71,8 @@ public class LikeablePersonController {
             likeablePersonService.delete(id);
             return rq.redirectWithMsg("/likeablePerson/list", deleteRsData.getMsg());
         }
-        return rq.historyBack(deleteRsData);
+        else
+            return rq.historyBack(deleteRsData);
 
 
     }
