@@ -73,7 +73,5 @@ public class LikeablePersonController {
         }
         else
             return rq.historyBack(deleteRsData);
-
-
     }
 }

@@ -32,6 +32,10 @@ public class LikeablePersonService {
         }
 
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
+        LikeablePerson exitedLikeable = findByFromAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId());
+        if(exitedLikeable != null){
+            return RsData.of("F-3", "이미 추가된 호감상대입니다.");
+        }
 
         LikeablePerson likeablePerson = LikeablePerson
                 .builder()
@@ -69,5 +73,8 @@ public class LikeablePersonService {
                 String.format("%s님에 대한 호감 표현을 삭제했습니다.", likeablePerson.getToInstaMemberUsername()));
     }
 
+    public LikeablePerson findByFromAndToInstaMemberId(Long fromId, Long ToId) {
+        return likeablePersonRepository.findByFromAndToInstaMember(fromId, ToId).orElse(null);
+    }
 }
 
