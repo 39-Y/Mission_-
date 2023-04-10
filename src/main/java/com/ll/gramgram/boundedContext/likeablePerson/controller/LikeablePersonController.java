@@ -65,6 +65,10 @@ public class LikeablePersonController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
-        return rq.redirectWithMsg("/likeablePerson/list", likeablePersonService.delete(id).getMsg());
+        InstaMember instaMember = rq.getMember().getInstaMember();
+        RsData rsData = likeablePersonService.setDeleteRsData(id, instaMember);
+        if(rsData.isSuccess())
+            likeablePersonService.delete(id);
+        return rq.redirectWithMsg("/likeablePerson/list", rsData.getMsg());
     }
 }

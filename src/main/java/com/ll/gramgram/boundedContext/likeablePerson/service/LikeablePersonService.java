@@ -52,16 +52,13 @@ public class LikeablePersonService {
     }
 
     @Transactional
-    public RsData delete(Long id) {
+    public void delete(Long id) {
         LikeablePerson likeablePerson = likeablePersonRepository.findById(id).orElse(null);
-        InstaMember instaMember = rq.getMember().getInstaMember();
-        RsData rsData= setDeleteRsData(likeablePerson, instaMember);
-        if(rsData.isSuccess())
-            likeablePersonRepository.delete(likeablePerson);
-        return rsData;
+        likeablePersonRepository.delete(likeablePerson);
     }
 
-    private RsData setDeleteRsData(LikeablePerson likeablePerson, InstaMember instaMember ){
+    public RsData setDeleteRsData(Long id, InstaMember instaMember ){
+        LikeablePerson likeablePerson = likeablePersonRepository.findById(id).orElse(null);
         if(likeablePerson == null)
             return RsData.of("F-1", "호감 표현이 존재하지 않아 삭제 실패했습니다.");
         else if(instaMember == null ||
