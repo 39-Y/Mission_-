@@ -15,10 +15,23 @@
         </div>
     </th:block>
 
+<!--    <th:block th:if="${@rq.member.hasConnectedInstaMember}">-->
+<!--        <ul>-->
+<!--            <li th:each="likeablePerson: ${likeablePeople}">-->
+<!--                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>-->
+<!--                <span class="toInstaMember_attractiveTypeDisplayName"-->
+<!--                      th:text="${likeablePerson.attractiveTypeDisplayName}"></span>-->
+<!--                <a th:href="@{|delete/${likeablePerson.id}|}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </th:block>-->
     <th:block th:if="${@rq.member.hasConnectedInstaMember}">
+        <span th:text="|내가 좋아하는 사람의 수 : ${#lists.size(@rq.member.instaMember.likes)}|"></span>
+        <!-- 나를 좋아하는 사람의 수 -->
+        <span th:text="|나를 좋아하는 사람의 수 : ${#lists.size(@rq.member.instaMember.likedBy)}|"></span>
         <ul>
-            <li th:each="likeablePerson: ${likeablePeople}">
-                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMember.username}"></span>
+            <li th:each="likeablePerson: ${@rq.member.instaMember.likes}">
+                <span class="toInstaMember_username" th:text="${likeablePerson.toInstaMemberUsername}"></span>
                 <span class="toInstaMember_attractiveTypeDisplayName"
                       th:text="${likeablePerson.attractiveTypeDisplayName}"></span>
                 <a th:href="@{|delete/${likeablePerson.id}|}" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</a>

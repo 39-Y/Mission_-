@@ -1,6 +1,8 @@
 package com.ll.gramgram.boundedContext.instaMember.entity;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +20,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ToString
+//@ToString
 @Entity
 @Getter
 public class InstaMember {
@@ -33,6 +35,7 @@ public class InstaMember {
     private String username;
     @Setter
     private String gender;
+
     @OneToMany(mappedBy = "toInstaMember", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     @BatchSize(size = 1000)
     @JsonIgnore

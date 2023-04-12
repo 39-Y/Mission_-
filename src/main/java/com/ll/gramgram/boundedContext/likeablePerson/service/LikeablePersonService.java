@@ -30,7 +30,10 @@ public class LikeablePersonService {
         if (member.getInstaMember().getUsername().equals(username)) {
             return RsData.of("F-1", "본인을 호감상대로 등록할 수 없습니다.");
         }
+        InstaMember userInstaMember = member.getInstaMember();
+        List<LikeablePerson> likes = userInstaMember.getLikes();
 
+        //
         InstaMember toInstaMember = instaMemberService.findByUsernameOrCreate(username).getData();
         LikeablePerson existedLikeable = findByFromAndToInstaMemberId(member.getInstaMember().getId(), toInstaMember.getId());
         //list에서 아이디 확인하는 방식으로 수정할 것.
@@ -41,7 +44,8 @@ public class LikeablePersonService {
                 return updateAttractiveType(existedLikeable, attractiveTypeCode);
         }
         //list 크기로 비교하도록 수정할 것.
-        if(countByFromInstaMemberId(member.getInstaMember().getId())>10){
+        //if(countByFromInstaMemberId(member.getInstaMember().getId())>10){
+        if(likes != null && likes.size()>=2){
             return RsData.of("F-4", "호감상대가 11명을 초과합니다.");
         }
         LikeablePerson likeablePerson = LikeablePerson
