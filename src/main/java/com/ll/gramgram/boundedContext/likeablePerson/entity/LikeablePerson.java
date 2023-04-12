@@ -15,7 +15,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ToString
+//@ToString
 @Entity
 @Getter
 public class LikeablePerson {

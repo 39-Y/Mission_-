@@ -51,15 +51,10 @@ public class LikeablePersonController {
     }
 
     @GetMapping("/list")
-    public String showList(Model model) {
+    public String showList() {
         InstaMember instaMember = rq.getMember().getInstaMember();
-
-        // 인스타인증을 했는지 체크
-        if (instaMember != null) {
-            List<LikeablePerson> likeablePeople = likeablePersonService.findByFromInstaMemberId(instaMember.getId());
-            model.addAttribute("likeablePeople", likeablePeople);
-        }
-
+        if(instaMember== null)
+            return "redirect:/likeablePerson/add";
         return "usr/likeablePerson/list";
     }
 

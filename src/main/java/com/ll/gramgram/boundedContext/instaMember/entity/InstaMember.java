@@ -1,12 +1,15 @@
 package com.ll.gramgram.boundedContext.instaMember.entity;
 
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -14,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@ToString
+//@ToString
 @Entity
 @Getter
 public class InstaMember {
@@ -29,4 +32,11 @@ public class InstaMember {
     private String username;
     @Setter
     private String gender;
+    @OneToMany(mappedBy = "toInstaMember", cascade = CascadeType.REMOVE)
+    @BatchSize(size = 1000)
+    private List<LikeablePerson> likedBy;
+
+    @OneToMany(mappedBy = "fromInstaMember", cascade = CascadeType.REMOVE)
+    @BatchSize(size = 100)
+    private List<LikeablePerson> likes;
 }
