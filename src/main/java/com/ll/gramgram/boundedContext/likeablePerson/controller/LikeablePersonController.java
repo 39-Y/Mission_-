@@ -45,11 +45,11 @@ public class LikeablePersonController {
                 rq.getMember(),
                 addForm.getUsername(),
                 addForm.getAttractiveTypeCode());
-        if (createRsData.isFail()) {
+        if (createRsData.isFail())
             return rq.historyBack(createRsData);
-        } else if (createRsData.getData()!= null && createRsData.getData() instanceof  LikeablePerson) {
+        else if (createRsData.getData()!= null && createRsData.getData() instanceof  LikeablePerson)
             likeablePersonService.updateAttractiveType(createRsData.getData(), addForm.getAttractiveTypeCode());
-        }
+
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
 
