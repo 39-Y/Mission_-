@@ -41,12 +41,15 @@ public class LikeablePersonController {
 
     @PostMapping("/add")
     public String add(@Valid AddForm addForm) {
-        RsData<LikeablePerson> createRsData = likeablePersonService.like(rq.getMember(), addForm.getUsername(), addForm.getAttractiveTypeCode());
-
+        RsData<LikeablePerson> createRsData = likeablePersonService.setLikeRsDate(
+                rq.getMember(),
+                addForm.getUsername(),
+                addForm.getAttractiveTypeCode());
         if (createRsData.isFail()) {
             return rq.historyBack(createRsData);
+        } else if (createRsData.getData()!= null && createRsData.getData() instanceof  LikeablePerson) {
+            likeablePersonService.updateAttractiveType(createRsData.getData(), addForm.getAttractiveTypeCode());
         }
-
         return rq.redirectWithMsg("/likeablePerson/list", createRsData);
     }
 
