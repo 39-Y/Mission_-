@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 
 @Entity
 @Getter
@@ -29,4 +32,52 @@ public class Notification extends BaseEntity {
     private int oldAttractiveTypeCode; // 해당사항 없으면 0
     private String newGender; // 해당사항 없으면 null
     private int newAttractiveTypeCode; // 해당사항 없으면 0
+
+    private String getAttractiveTypeDisplayName(int attractiveTypeCode) {
+        return switch (attractiveTypeCode) {
+            case 0 -> "없음";
+            case 1 -> "외모";
+            case 2 -> "성격";
+            default -> "능력";
+        };
+    }
+
+    public String getNewAttractiveTypeDisplayName(){
+        return getAttractiveTypeDisplayName(newAttractiveTypeCode);
+    }
+
+    public String getOldAttractiveTypeDisplayName(){
+        return getAttractiveTypeDisplayName(oldAttractiveTypeCode);
+    }
+
+    public String getElapsedTimeDisplay(){
+        Period period = Period.between(super.getCreateDate().toLocalDate(), LocalDate.now());
+        if (period.getYears() > 0) {
+            return period.getYears() + "년";
+        } else if (period.getMonths() > 0) {
+            return period.getMonths() + "달";
+        } else if (period.getDays() > 0) {
+            return period.getDays() + "일";
+        } else {
+            Duration  elapsedTime = Duration.between(super.getCreateDate(),LocalDateTime.now());
+            if(elapsedTime.toSeconds()<60)
+                return elapsedTime.toSeconds()+"초";
+            else if(elapsedTime.toMinutes()<60)
+                return elapsedTime.toMinutes()+"분";
+            else
+                return elapsedTime.toHours()+"시간";
+        }
+    }
+
+    public boolean markAsRead(){
+        Duration duration = Duration.between(readDate, LocalDateTime.now());
+        if(duration.toSeconds()<3)
+            return true;
+        return false;
+    }
+
+
+    public void updateReadDate(LocalDateTime readDate) {
+        this.readDate =readDate;
+    }
 }
