@@ -7,6 +7,7 @@ import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.likeablePerson.service.LikeablePersonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
+import jakarta.websocket.server.PathParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/usr/likeablePerson")
@@ -56,7 +58,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String showList(Model model) {
+    public String showList(Model model, @RequestParam Map<String, String> searchMap) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
@@ -65,7 +67,6 @@ public class LikeablePersonController {
             List<LikeablePerson> likeablePeople = instaMember.getFromLikeablePeople();
             model.addAttribute("likeablePeople", likeablePeople);
         }
-
         return "usr/likeablePerson/list";
     }
 
@@ -90,7 +91,7 @@ public class LikeablePersonController {
     public String showModify(@PathVariable Long id, Model model) {
         LikeablePerson likeablePerson = likeablePersonService.findById(id).orElseThrow();
 
-        RsData canModifyRsData = likeablePersonService.canModifyLike(rq.getMember(), likeablePerson);
+        RsData canModifyRsData = likeablePersonService.canModify(rq.getMember(), likeablePerson);
 
         if (canModifyRsData.isFail()) return rq.historyBack(canModifyRsData);
 
@@ -122,9 +123,16 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    @ResponseBody
     public String showToList(Model model) {
-        //TODO : showToList 구현해야 함
-        return "usr/likeablePerson/toList 구현해야 함";
+        InstaMember instaMember = rq.getMember().getInstaMember();
+
+        // 인스타인증을 했는지 체크
+        if (instaMember != null) {
+            // 해당 인스타회원이 좋아하는 사람들 목록
+            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            model.addAttribute("likeablePeople", likeablePeople);
+        }
+
+        return "usr/likeablePerson/toList";
     }
 }

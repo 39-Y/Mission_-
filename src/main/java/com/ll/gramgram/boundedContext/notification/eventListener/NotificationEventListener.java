@@ -1,41 +1,33 @@
 package com.ll.gramgram.boundedContext.notification.eventListener;
 
-import com.ll.gramgram.base.event.*;
+import com.ll.gramgram.base.event.EventAfterLike;
+import com.ll.gramgram.base.event.EventAfterModifyAttractiveType;
+import com.ll.gramgram.boundedContext.likeablePerson.entity.LikeablePerson;
 import com.ll.gramgram.boundedContext.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class NotificationEventListener {
     private final NotificationService notificationService;
 
-    //New like
     @EventListener
-    @Transactional
-    public void listen(EventAfterLike event){
-        notificationService.create(event.getLikeablePerson(), "Like");
-    }
+    public void listen(EventAfterLike event) {
+        LikeablePerson likeablePerson = event.getLikeablePerson();
 
-    //Modify like
-    @EventListener
-    @Transactional
-    public void listen(EventAfterModifyAttractiveType event){
-        notificationService.create(event.getLikeablePerson(), event.getOldAttractiveTypeCode());
-    }
-
-    //Cancel like
-    @EventListener
-    @Transactional
-    public void listen(EventBeforeCancelLike event){
-        notificationService.create(event.getLikeablePerson(), "Cancel");
+        notificationService.makeLike(likeablePerson);
     }
 
     @EventListener
-    @Transactional
-    public void listen(EventVisitListNotification event){
-        notificationService.updateReadDate(event.getInstaMember(), event.getReadDate());
+    public void listen(EventAfterModifyAttractiveType event) {
+        LikeablePerson likeablePerson = event.getLikeablePerson();
+
+        notificationService.makeModifyAttractive(likeablePerson, event.getOldAttractiveTypeCode());
     }
 }
