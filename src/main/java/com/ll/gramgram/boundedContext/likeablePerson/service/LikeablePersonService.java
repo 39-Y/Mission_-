@@ -87,6 +87,10 @@ public class LikeablePersonService {
 
     public RsData canCancel(Member actor, LikeablePerson likeablePerson) {
         if (likeablePerson == null) return RsData.of("F-1", "이미 삭제되었습니다.");
+        if(!likeablePerson.isModifyUnlocked())
+            return RsData.of("F-3", String.format("호감사유 변경과 호감취소는 %s 후에 가능합니다.",
+                    likeablePerson.getModifyUnlockDateRemainStrHuman()));
+
 
         // 수행자의 인스타계정 번호
         long actorInstaMemberId = actor.getInstaMember().getId();
@@ -202,7 +206,9 @@ public class LikeablePersonService {
         if (!actor.hasConnectedInstaMember()) {
             return RsData.of("F-1", "먼저 본인의 인스타그램 아이디를 입력해주세요.");
         }
-
+        if(!likeablePerson.isModifyUnlocked())
+            return RsData.of("F-3", String.format("호감사유 변경과 호감취소는 %s 후에 가능합니다.",
+                    likeablePerson.getModifyUnlockDateRemainStrHuman()));
         InstaMember fromInstaMember = actor.getInstaMember();
 
         if (!Objects.equals(likeablePerson.getFromInstaMember().getId(), fromInstaMember.getId())) {
