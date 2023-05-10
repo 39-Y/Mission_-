@@ -221,8 +221,11 @@ public class LikeablePersonService {
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
     }
 
-    public List<LikeablePerson> search(Map<String, String> filterMap) {
-        return likeablePersonRepository.findByFields(filterMap.get("gender"),
-                filterMap.get("attractiveTypeCode"));
+    public List<LikeablePerson> search(Member actor, Map<String, String> filterMap) {
+        return likeablePersonRepository.findQslByFields(
+                actor.getInstaMember(),
+                filterMap.get("gender"),
+                filterMap.get("attractiveTypeCode"),
+                filterMap.get("sortCode"));
     }
 }

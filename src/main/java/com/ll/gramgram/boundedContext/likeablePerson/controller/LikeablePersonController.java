@@ -130,14 +130,13 @@ public class LikeablePersonController {
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
             List<LikeablePerson> likeablePeople;
+            System.out.println(filterMap+"//"+filterMap.size());
             if(filterMap.size()==0)
                 likeablePeople = instaMember.getToLikeablePeople();
             else
-                likeablePeople = likeablePersonService.search(filterMap);
+                likeablePeople = likeablePersonService.search(rq.getMember(), filterMap);
             model.addAttribute("likeablePeople", likeablePeople);
         }
-        //likeablePersonService.search(filterMap);
-        System.out.println(filterMap+"//"+filterMap.size());
         return "usr/likeablePerson/toList";
     }
 }

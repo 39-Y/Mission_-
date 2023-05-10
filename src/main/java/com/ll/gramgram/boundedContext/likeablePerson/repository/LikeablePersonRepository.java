@@ -17,12 +17,4 @@ public interface LikeablePersonRepository extends JpaRepository<LikeablePerson, 
     LikeablePerson findByFromInstaMemberIdAndToInstaMember_username(long fromInstaMemberId, String username);
 
     Optional<LikeablePerson> findByFromInstaMember_usernameAndToInstaMember_username(String fromInstaMemberUsername, String toInstaMemberUsername);
-    @Query("SELECT e FROM LikeablePerson e WHERE 1 = 1" +
-            " AND (:gender IS NULL OR :gender = '' OR e.fromInstaMember.gender = :gender)" +
-            " AND (:attractiveTypeCode IS NULL OR :attractiveTypeCode='' OR e.attractiveTypeCode = :attractiveTypeCode)" +
-            " ORDER BY e.createDate ASC")
-    List<LikeablePerson> findByFields(@Param("gender") String gender,
-                                      @Param("attractiveTypeCode") String attractiveTypeCode
-                                      );
-
 }
