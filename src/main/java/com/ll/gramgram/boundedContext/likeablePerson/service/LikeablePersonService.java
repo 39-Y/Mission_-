@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -218,5 +219,13 @@ public class LikeablePersonService {
 
 
         return RsData.of("S-1", "호감사유변경이 가능합니다.");
+    }
+
+    public List<LikeablePerson> search(Member actor, Map<String, String> filterMap) {
+        return likeablePersonRepository.findQslByFields(
+                actor.getInstaMember(),
+                filterMap.get("gender"),
+                filterMap.get("attractiveTypeCode"),
+                filterMap.get("sortCode"));
     }
 }

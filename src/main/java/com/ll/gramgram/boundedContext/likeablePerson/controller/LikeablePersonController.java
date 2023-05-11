@@ -58,7 +58,7 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/list")
-    public String showList(Model model, @RequestParam Map<String, String> searchMap) {
+    public String showList(Model model) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
@@ -123,16 +123,20 @@ public class LikeablePersonController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/toList")
-    public String showToList(Model model) {
+    public String showToList(Model model , @RequestParam Map<String, String> filterMap) {
         InstaMember instaMember = rq.getMember().getInstaMember();
 
         // 인스타인증을 했는지 체크
         if (instaMember != null) {
             // 해당 인스타회원이 좋아하는 사람들 목록
-            List<LikeablePerson> likeablePeople = instaMember.getToLikeablePeople();
+            List<LikeablePerson> likeablePeople;
+            System.out.println(filterMap+"//"+filterMap.size());
+            if(filterMap.size()==0)
+                likeablePeople = instaMember.getToLikeablePeople();
+            else
+                likeablePeople = likeablePersonService.search(rq.getMember(), filterMap);
             model.addAttribute("likeablePeople", likeablePeople);
         }
-
         return "usr/likeablePerson/toList";
     }
 }
